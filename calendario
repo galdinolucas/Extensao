@@ -1,0 +1,68 @@
+import random
+from datetime import datetime, timedelta
+
+class AplicativoCalendario:
+    def __init__(self):
+        self.tarefas_pre_estabelecidas = []
+        self.sugestoes_lazer = []
+        self.tarefas_agendadas = []
+
+    # Input de tarefas pré-estabelecidas para sugestões aleatórias durante a semana
+    def adicionar_tarefa_pre_estabelecida(self, tarefa, frequencia_por_semana):
+        self.tarefas_pre_estabelecidas.append({"tarefa": tarefa, "frequencia": frequencia_por_semana})
+    
+    # Input de sugestões de lazer e atividades não obrigatórias
+    def adicionar_sugestao_lazer(self, sugestao):
+        self.sugestoes_lazer.append(sugestao)
+    
+    # Input de tarefa pré-estabelecida com data definida
+    def adicionar_tarefa_agendada(self, tarefa, data):
+        self.tarefas_agendadas.append({"tarefa": tarefa, "data": data})
+    
+    # Função para gerar sugestões aleatórias para a semana
+    def sugerir_tarefas_semanais(self):
+        sugestoes = []
+        for tarefa in self.tarefas_pre_estabelecidas:
+            for _ in range(tarefa["frequencia"]):
+                sugestoes.append(tarefa["tarefa"])
+        random.shuffle(sugestoes)
+        return sugestoes
+    
+    # Função para sugerir uma atividade de lazer aleatória
+    def sugerir_atividade_lazer(self):
+        if self.sugestoes_lazer:
+            return random.choice(self.sugestoes_lazer)
+        return "Nenhuma sugestão de lazer disponível."
+
+    # Exibir tarefas pré-estabelecidas para o dia atual
+    def exibir_tarefas_agendadas(self):
+        hoje = datetime.now().date()
+        tarefas_hoje = [tarefa["tarefa"] for tarefa in self.tarefas_agendadas if tarefa["data"] == hoje]
+        if tarefas_hoje:
+            return f"Tarefas de hoje: {', '.join(tarefas_hoje)}"
+        return "Nenhuma tarefa agendada para hoje."
+    
+# Exemplo de uso do aplicativo de calendário
+calendario = AplicativoCalendario()
+
+# Adicionando tarefas pré-estabelecidas
+calendario.adicionar_tarefa_pre_estabelecida("Passear com o cachorro", 1)
+calendario.adicionar_tarefa_pre_estabelecida("Ir à academia", 3)
+
+# Adicionando sugestões de lazer
+calendario.adicionar_sugestao_lazer("Que tal ir ao cinema hoje?")
+calendario.adicionar_sugestao_lazer("Que tal um jantar especial hoje à noite?")
+
+# Adicionando tarefas agendadas
+calendario.adicionar_tarefa_agendada("Ir ao mercado", datetime.now().date())  # Tarefa para hoje
+calendario.adicionar_tarefa_agendada("Consulta médica", datetime.now().date() + timedelta(days=3))
+
+# Exibindo sugestões e tarefas
+print("Sugestões aleatórias de tarefas para a semana:")
+print(calendario.sugerir_tarefas_semanais())
+
+print("\nSugestão de lazer:")
+print(calendario.sugerir_atividade_lazer())
+
+print("\nTarefas agendadas para hoje:")
+print(calendario.exibir_tarefas_agendadas())
